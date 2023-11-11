@@ -2,7 +2,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,prometheus, testOK, testClientError, testServerError, test1
+        include: health,prometheus
   metrics:
     tags:
       application: ${spring.application.name}
