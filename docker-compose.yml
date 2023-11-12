@@ -1,27 +1,39 @@
-version: '3'
+version: '3.7'
+
 services:
   my-app:
     container_name: spring-boot-application
     image: univer-task
-    hostname: roma
     ports:
-      - "9000:8080"
-    expose:
-      - "8080"
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus
-    restart: always
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    hostname: prometheus_univer
-    ports:
-      - "9090:9090"
-    command: --config.file=/etc/prometheus/config.yml
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/config.yml
+      - 8080:8080
   grafana:
-    container_name: grafana
-    image: grafana/grafana
+    build: './config/grafana'
     ports:
-      - "3000:3000"
+      - 3000:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      monitoring:
+        aliases:
+          - grafana
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    networks:
+      monitoring:
+        aliases:
+          - prometheus
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - 8081:8081
+networks:
+  monitoring:

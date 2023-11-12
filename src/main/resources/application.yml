@@ -2,10 +2,11 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,prometheus
+        include: health,prometheus, *
   metrics:
-    tags:
-      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
     distribution:
       percentiles-histogram:
         "[http.server.requests]": true
