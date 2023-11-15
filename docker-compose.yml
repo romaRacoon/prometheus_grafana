@@ -4,6 +4,14 @@ services:
   my-app:
     container_name: spring-boot-application
     image: univer-task
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 512M
+        reservations:
+          cpus: 1
+          memory: 128M
     ports:
       - 8080:8080
   grafana:
@@ -15,12 +23,28 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 512M
+        reservations:
+          cpus: 1
+          memory: 128M
     networks:
       monitoring:
         aliases:
           - grafana
   prometheus:
     image: prom/prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 512M
+        reservations:
+          cpus: 1
+          memory: 128M
     ports:
       - 9090:9090
     volumes:
@@ -32,6 +56,14 @@ services:
           - prometheus
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 512M
+        reservations:
+          cpus: 1
+          memory: 128M
     container_name: cadvisor
     ports:
       - 8081:8081
